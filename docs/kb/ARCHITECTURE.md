@@ -1,6 +1,6 @@
 # Architecture
 
-State on 2026-10-17, commit `0fe9ae1`. Two Python scripts. No package, no tests.
+State on 2026-10-17, as of the commit that added `bench.py`. Three Python scripts. No package, no tests.
 
 ## Folder structure
 ```
@@ -10,6 +10,7 @@ Unload/
 ├── .venv/          # virtual env, Python 3.14.4. Git-ignored.
 ├── hello.py        # step 1: one Gemini call, prints the reply
 ├── sorter.py       # steps 2–3: answer schema + sorter, run from the terminal
+├── bench.py        # speed benchmark: 5 runs of sort_dump(), prints median
 ├── CLAUDE.md       # session entry file for Claude Code
 ├── AGENTS.md       # session entry pointer for other assistants
 └── docs/kb/        # this knowledge base
@@ -46,25 +47,37 @@ Classes (Pydantic `BaseModel`):
 - The `Field(description=...)` texts end up in the JSON schema, so Gemini sees them.
 
 Function:
-- `sort_dump(dump: str) -> SortedDump` (lines 36–46)
+- `sort_dump(dump: str, thinking_level: str = "low") -> SortedDump` (lines 36–47)
   - Sends `RULES + dump` to `gemini-3.8-flash`.
+  - Passes `generation_config={"thinking_level": thinking_level}` (line 40). Default `"low"` (D18).
   - Passes `response_format={"type": "text", "mime_type": "application/json", "schema": SortedDump.model_json_schema()}`.
   - Returns `SortedDump.model_validate_json(interaction.output_text)`.
   - Raises `pydantic.ValidationError` if the reply does not match the schema.
   - No error handling around the API call.
 
-`__main__` block (lines 48–64):
-- Uses a hard-coded sample dump of 8 items (lines 49–51).
-- Times `sort_dump()` with `time.perf_counter()` (lines 53–55).
-- Prints items grouped by bucket, in the order `tonight`, `this_week`, `later`, `cant_fix_now` (line 57), each with its `why`.
+`__main__` block (lines 50–66):
+- Uses a hard-coded sample dump of 8 items (lines 51–53).
+- Times `sort_dump()` with `time.perf_counter()` (lines 55–57). Uses the default thinking level.
+- Prints items grouped by bucket, in the order `tonight`, `this_week`, `later`, `cant_fix_now` (line 59), each with its `why`.
 - Prints `Next step: ...` and `Took X.X s`.
+
+### `bench.py` (speed benchmark)
+- Usage: `python bench.py [low|medium]`. With no argument it uses `"medium"` (line 11). See `GOTCHAS.md` #11.
+- Imports `sort_dump` from `sorter.py`, so importing creates the Gemini client.
+- `DUMP` (lines 7–9): the same 8 items as the `sorter.py` sample dump.
+- Runs `sort_dump(DUMP, thinking_level=LEVEL)` `RUNS = 5` times (lines 12–25).
+- Each run prints its time, the item count, and whether an item with "wifi" landed in `cant_fix_now`.
+- At the end prints the median (`statistics.median`), fastest and slowest.
+- Every run is a real API call against the free-tier quota.
 
 ## Data flow
 ```
 user text  (dump: str, hard-coded in __main__ for now)
   → prompt: RULES + dump
   → client.interactions.create(model="gemini-3.8-flash",
+        generation_config = {"thinking_level": "low"},
         response_format = JSON schema from SortedDump.model_json_schema())
+     (on 429 errors the SDK retries silently with backoff; see GOTCHAS.md #9)
   → Gemini returns JSON text in interaction.output_text
   → SortedDump.model_validate_json(...)   Pydantic check; raises on mismatch
   → SortedDump object (items + next_step)
@@ -87,6 +100,7 @@ user text  (dump: str, hard-coded in __main__ for now)
 - Bucket names: three places that must match. All say `cant_fix_now` since commit `0fe9ae1` (`DECISIONS.md` D14).
   - Schema: `sorter.py:13`
   - Prompt: `sorter.py:27–30`
-  - Print loop: `sorter.py:57`
+  - Print loop: `sorter.py:59`
   - See `GOTCHAS.md` #4.
-- Sample dump for terminal runs: `sorter.py:49–51`. Work-type tasks only (`GOTCHAS.md` #1).
+- Thinking level: default at `sorter.py:36`; `bench.py`'s no-argument default at `bench.py:11`.
+- Sample dump for terminal runs: `sorter.py:51–53`, and the copy in `bench.py:7–9`. Work-type tasks only (`GOTCHAS.md` #1).

@@ -2,6 +2,22 @@
 
 Session log, newest first. One entry per session. Dates as YYYY-MM-DD.
 
+## 2026-10-17: Speed benchmark, thinking level "low", rate limits
+- What changed:
+  - New `bench.py`: runs `sort_dump()` 5 times on a fixed 8-item dump. Prints each run's time, item count and wifi check, then the median, fastest and slowest. Usage: `python bench.py [low|medium]`.
+  - `sorter.py`: `sort_dump(dump, thinking_level="low")`, sent as `generation_config={"thinking_level": ...}`.
+  - Git: `72ec626` (pushed by Ayush) only adds a final newline to `sorter.py`, under the same message as `0fe9ae1`.
+  - KB: `STATUS.md`, `CHANGELOG.md`, `DECISIONS.md` (D11, D17, new D18–D20), `NUMBERS.md`, `GOTCHAS.md` (#1, #2, #4, new #9–#11), `ARCHITECTURE.md`, `SETUP.md`, `INDEX.md`. Line numbers now refer to the commit that added `bench.py`.
+  - Committed `sorter.py`, `bench.py` and the KB together. Ayush pushes.
+- Why:
+  - D17: measure speed properly (several runs, median) before any fix.
+  - Result: low median 8.1 s vs medium 14.9 s, same results on this test, so the default is now `"low"` (D18).
+- Found:
+  - After about 20 calls: `429 Too Many Requests`. The SDK retries silently, so `bench.py` looked frozen for about 10 minutes (`GOTCHAS.md` #9).
+  - A second API key hit the same quota. Limits are per project, not per key (`GOTCHAS.md` #10). Rule: no extra keys or projects (D19).
+  - Daily free-tier limits reset at midnight Pacific (12:30 PM IST until 2026-11-01). (stated by Ayush)
+- What's left: a time limit and fewer retries, then step 4 (D20). Then `requirements.txt` and step 5. Two local commits wait for Ayush to push.
+
 ## 2026-10-17: Bucket fix, more timings, KB update
 - Ayush fixed the bucket name: `cant_fix_now` everywhere (commit `0fe9ae1`, "Use one name for the cant_fix_now bucket").
   - The same commit added "the college wifi is down tonight" to the sample dump (now 8 items).

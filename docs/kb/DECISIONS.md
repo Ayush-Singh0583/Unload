@@ -81,7 +81,7 @@
 - Target: one sort under 10 s, measured with the timer in `sorter.py`.
 - Why: One sort took 49.4 s (`NUMBERS.md`). Cause unknown.
 - Considered: Not recorded.
-- State: not met. Single runs so far: 49.4 s, 15.3 s, 43.8 s (`NUMBERS.md`).
+- State: with thinking level `"low"` (D18), median 8.1 s over 5 runs (under 10 s), slowest 40.8 s (over). Whether the target means the median or every run is open (`STATUS.md`).
 
 ## D12. Public GitHub repo
 - Date: 2026-10-17
@@ -124,3 +124,24 @@
 - Why: Not stated directly. Context: three single runs gave 49.4 s, 15.3 s and 43.8 s, and the cause of the variation is unknown (`NUMBERS.md`).
 - Considered: D16's order, which went straight to the speed fix.
 - Replaces: D16.
+- State: measuring done on 2026-10-17 with `bench.py` (5 runs per setting, median). The order is replaced by D20.
+
+## D18. Default thinking level is "low"
+- Date: 2026-10-17
+- Decision: `sort_dump()` sends `thinking_level="low"` by default (`sorter.py:36`, sent as `generation_config`).
+- Why: About 45% faster with the same results on this test. Benchmark (5 runs each, Ayush's own network, 8-item dump): low median 8.1 s, medium median 14.9 s. Both: 8 items and the wifi line right in 5 of 5 runs.
+- Caveat: only 5 runs and one check per setting.
+- Considered: `"medium"` (benchmarked). Not tested: `"minimal"` and `"high"`, which the SDK also accepts.
+
+## D19. Don't work around rate limits with more keys or projects
+- Date: 2026-10-17
+- Decision: Don't work around free-tier limits with more API keys or more projects.
+- Why: Limits are per project, not per key. A second API key also hit the quota ("Your project has exceeded a quota"). Why not more projects: Not recorded.
+- Considered: A second API key. Tried on 2026-10-17; it hit the same quota.
+
+## D20. Next: time limit and fewer retries, then step 4
+- Date: 2026-10-17
+- Decision: 1 add a time limit and fewer retries to the Gemini call, 2 step 4 (FastAPI `POST /sort`).
+- Why: So failures are fast and clear. Context: silent SDK retries made a run look frozen for about 10 minutes (`GOTCHAS.md` #9).
+- Considered: D17's order (`requirements.txt`, then the speed fix, then step 4).
+- Replaces: the order in D17. `requirements.txt` is not placed yet (`STATUS.md` question 3). Step 5 still follows step 4.

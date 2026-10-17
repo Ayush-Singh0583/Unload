@@ -33,10 +33,11 @@ Then pick one next_step: the smallest useful action to do first.
 Brain dump:
 """
 
-def sort_dump(dump:str)-> SortedDump:
+def sort_dump(dump: str, thinking_level: str = "low") -> SortedDump:
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input=RULES + dump,
+        generation_config={"thinking_level": thinking_level},
         response_format={
             "type": "text",
             "mime_type": "application/json",
@@ -44,7 +45,8 @@ def sort_dump(dump:str)-> SortedDump:
         },
     )
     return SortedDump.model_validate_json(interaction.output_text)
-        
+
+
 if __name__ == "__main__":
     dump = """infrrd form due soon, fix the numbers on my resume, portfolio timeline,
             dp revision, bda viva prep, plan a trip with my friend, sleep properly,

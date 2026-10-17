@@ -64,7 +64,16 @@ python sorter.py
 - Prints sections `== tonight ==`, `== this_week ==`, `== later ==`, `== cant_fix_now ==`.
 - Each item is printed as `- <text>  (<why>)`.
 - Then prints `Next step: ...` and `Took X.X s`.
-- To try other text, change the `dump` string in the `__main__` block (`sorter.py:49–51`). Work-type tasks only (`GOTCHAS.md` #1).
+- To try other text, change the `dump` string in the `__main__` block (`sorter.py:51–53`). Work-type tasks only (`GOTCHAS.md` #1).
+
+Speed benchmark (5 API calls per run):
+```bash
+python bench.py low
+python bench.py medium
+```
+- Prints each run's time, item count and wifi check, then the median, fastest and slowest.
+- With no argument it uses `"medium"`, not the app default `"low"` (`GOTCHAS.md` #11).
+- Every run uses free-tier quota. If it seems frozen, the SDK may be silently retrying a 429 (`GOTCHAS.md` #9, #10).
 
 ## Not set up yet
 - No FastAPI app, so there is no server to start yet (step 4).
