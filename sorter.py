@@ -10,7 +10,7 @@ client = genai.Client()
 
 class Item(BaseModel):
     text: str = Field(description = "One thing From the dump , as a short Clear line.")
-    bucket: Literal["tonight","this_week","later","can't fix now"] = Field(
+    bucket: Literal["tonight","this_week","later","cant_fix_now"] = Field(
         description = "When this Should be Dealt with."
     )
     why: str = Field(description = "One short reason for this bucket.")
@@ -47,7 +47,8 @@ def sort_dump(dump:str)-> SortedDump:
         
 if __name__ == "__main__":
     dump = """infrrd form due soon, fix the numbers on my resume, portfolio timeline,
-    dp revision, bda viva prep, plan a trip with my friend, sleep properly"""
+            dp revision, bda viva prep, plan a trip with my friend, sleep properly,
+            the college wifi is down tonight"""
 
     start = time.perf_counter()
     result = sort_dump(dump)
