@@ -8,26 +8,36 @@ Every measured number goes here. Do not quote a number anywhere unless this file
 - **CONFLICT**: two sources disagree. The notes say which ones.
 
 ## Measurements
+All results reported by Ayush. Rows are in the order the runs happened.
 
-| What | Value | Date | How measured | Tag |
-|---|---|---|---|---|
-| One sort, `python sorter.py` | 49.4 s | 2026-10-17 | `time.perf_counter()` around `sort_dump(dump)` in `sorter.py` (lines 52–54), printed at line 63. Sample dump at lines 49–50. One run, reported by Ayush. | VERIFIED (1 run) |
-| One call, `python hello.py` (five-word reply) | about 1 minute | 2026-10-17 | Not timed. A rough feel (confirmed by Ayush, 2026-10-17). | UNVERIFIED |
+| What | Value | Date | Network | Sample dump | Tag |
+|---|---|---|---|---|---|
+| One sort, `python sorter.py` | 49.4 s | 2026-10-17 | Hostel Wi-Fi | 7 items (commit `deeb458`) | VERIFIED (1 run) |
+| One sort, `python sorter.py` | 15.3 s | 2026-10-17 | Ayush's own network | Not recorded | VERIFIED (1 run) |
+| One sort, `python sorter.py` | 43.8 s | 2026-10-17 | Ayush's own network | Not recorded | VERIFIED (1 run) |
+| One call, `python hello.py` (five-word reply) | about 1 minute | 2026-10-17 | Not recorded | n/a | UNVERIFIED |
+
+How the `sorter.py` rows were measured:
+- `time.perf_counter()` around `sort_dump(dump)` in `sorter.py`, printed by the `Took X.X s` line.
+- Lines 53–55 and 64 at commit `0fe9ae1` (lines 52–54 and 63 at `deeb458`).
+
+How the `hello.py` row was measured:
+- Not timed. A rough feel (confirmed by Ayush, 2026-10-17). Keep it UNVERIFIED.
 
 ### Notes
-- The 49.4 s covers only the `sort_dump()` call: the Gemini request plus the Pydantic check.
+- Times vary a lot between runs, even on the same network (15.3 s and 43.8 s). Cause unknown. (stated by Ayush)
+- Next step: measure properly (several runs, median) before trying any fix. (stated by Ayush; `STATUS.md` Next up #1)
+- The timer covers only the `sort_dump()` call: the Gemini request plus the Pydantic check.
   - It does not include Python start-up, imports or creating `genai.Client()`.
-- The `hello.py` figure was never timed. Keep it UNVERIFIED (stated by Ayush).
-- Neither number was re-run in the 2026-10-17 knowledge-base session.
-- Cause of the slowness: unknown. See `GOTCHAS.md` #2.
+- On the hostel Wi-Fi, DNS also failed for the Gemini API that day. See `GOTCHAS.md` #8.
 
 ## Targets (goals, not measurements)
 
 | Target | Value | Set on | How it will be measured |
 |---|---|---|---|
-| One sort | under 10 s | 2026-10-17 (stated by Ayush) | The `time.perf_counter()` timer in `sorter.py` (lines 52–54) |
+| One sort | under 10 s | 2026-10-17 (stated by Ayush) | The `time.perf_counter()` timer in `sorter.py` |
 
-- Latest measurement against it: 49.4 s (VERIFIED, 1 run). Not met.
+- Measurements so far: 49.4 s, 15.3 s, 43.8 s (VERIFIED, 1 run each). Not met.
 
 ## Fixed values in the code (limits, not measurements)
 These are rules written into the prompt or schema. They are not measured results.
@@ -36,7 +46,7 @@ These are rules written into the prompt or schema. They are not measured results
 |---|---|---|
 | under 15 minutes | `sorter.py:21` (`next_step` description) | The next step must take under 15 minutes |
 | 7 days | `sorter.py:28` (`RULES`) | `this_week` means it has to happen in the next 7 days |
-| 4 buckets | `sorter.py:13` (`Item.bucket`) | tonight, this_week, later, and the fourth bucket (decided name `cant_fix_now`) |
+| 4 buckets | `sorter.py:13` (`Item.bucket`) | `tonight`, `this_week`, `later`, `cant_fix_now` |
 | 5 words | `hello.py:8` | The hello prompt asks for five words |
 
 ## Environment (from `.venv`, 2026-10-17)
@@ -45,5 +55,6 @@ These are rules written into the prompt or schema. They are not measured results
 
 ## How to add a number
 - Add a row: what, value, date (YYYY-MM-DD), exact method (file and line of the timer), tag.
-- Say how many runs it is based on.
+- Say how many runs it is based on. With several runs, give the median.
+- For timings, also record the network and which sample dump was used (commit or item count).
 - If a new measurement disagrees with an old one, keep both rows and tag them CONFLICT until explained.

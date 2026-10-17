@@ -18,7 +18,7 @@ Start here if you are new to this repo. Read the files in this order.
 - **(suggested by Claude, accepted by Ayush)**: Claude proposed it and Ayush agreed, on the date given.
 - **VERIFIED / UNVERIFIED / CONFLICT**: tags on numbers. Defined at the top of `NUMBERS.md`.
 - Facts with no marker come from the repo files, `.venv` package list, git history or the GitHub API.
-- Line numbers refer to commit `deeb458` unless a file says otherwise.
+- Line numbers refer to commit `0fe9ae1` unless a file says otherwise.
 
 ## Entry files in the repo root
 - `CLAUDE.md`: summary and rules. Claude Code loads it automatically, and it pulls in `STATUS.md`.

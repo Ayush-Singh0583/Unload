@@ -2,6 +2,17 @@
 
 Session log, newest first. One entry per session. Dates as YYYY-MM-DD.
 
+## 2026-10-17: Bucket fix, more timings, KB update
+- Ayush fixed the bucket name: `cant_fix_now` everywhere (commit `0fe9ae1`, "Use one name for the cant_fix_now bucket").
+  - The same commit added "the college wifi is down tonight" to the sample dump (now 8 items).
+  - Tested: that item landed in `cant_fix_now`. All 8 items came back, none invented. (stated by Ayush)
+- Ayush pushed `ad38323` (KB) and `0fe9ae1`. GitHub `main` = `0fe9ae1` (checked with the GitHub API).
+- New `sorter.py` timings, one run each: 15.3 s and 43.8 s on Ayush's own network. The earlier 49.4 s was on the hostel Wi-Fi. Cause of the variation unknown. (`NUMBERS.md`)
+- Found: on the hostel Wi-Fi, DNS failed for `github.com` and the Gemini API (`GOTCHAS.md` #8).
+- Next up changed: measure speed properly first (D17, replaces D16).
+- KB updated: `STATUS.md`, `NUMBERS.md`, `GOTCHAS.md` (#2, #4, new #8), `DECISIONS.md` (D3, D11, D14, D16, new D17), `ARCHITECTURE.md`, `OVERVIEW.md`, `SETUP.md`, `INDEX.md`. Line numbers now refer to `0fe9ae1`.
+- KB commit made by Claude Code. Ayush pushes it.
+
 ## 2026-10-17: Knowledge base created
 - Claude Code built the KB at Ayush's request.
 - Added `docs/kb/`: `INDEX.md`, `OVERVIEW.md`, `ARCHITECTURE.md`, `SETUP.md`, `STATUS.md`, `DECISIONS.md`, `NUMBERS.md`, `GOTCHAS.md`, `CHANGELOG.md`.

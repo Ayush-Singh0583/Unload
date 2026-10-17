@@ -11,9 +11,9 @@
 | tonight | `tonight` | Small, or needed to rest tonight |
 | this week | `this_week` | Has to happen in the next 7 days |
 | later | `later` | Goals or plans with no deadline this week |
-| can't fix right now | `cant_fix_now` (decided; the schema at `sorter.py:13` still says `"can't fix now"`) | Outside your control right now, or a feeling to acknowledge, not a task |
+| can't fix right now | `cant_fix_now` | Outside your control right now, or a feeling to acknowledge, not a task |
 
-- Ayush decided on `cant_fix_now` everywhere (2026-10-17). Until `sorter.py:13` is fixed, the code doesn't match. See `GOTCHAS.md` #4.
+- The fourth bucket is `cant_fix_now` everywhere in the code since commit `0fe9ae1` (2026-10-17). See `GOTCHAS.md` #4.
 - Each item also gets a one-line reason for its bucket (the `why` field).
 - Unload also picks one small next step: the smallest useful action to do first. The schema asks for under 15 minutes.
 - The prompt says: only use things that are in the dump, and never invent new tasks.

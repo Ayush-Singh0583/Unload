@@ -23,7 +23,7 @@
 - Decision: Commits made with AI help end with the line `Co-Authored-By: Claude`. No email. No hiding that AI helped.
 - Why: Ayush wants to be honest about how it was built. (suggested by Claude, accepted by Ayush) Leaving out the email is Ayush's choice.
 - Considered: A trailer with an email address. Ayush chose no email.
-- Seen in git: commit `deeb458` ends with this line.
+- Seen in git: commits `deeb458`, `ad38323` and `0fe9ae1` all end with this line.
 
 ## D4. Python, google-genai, gemini-3.8-flash
 - Date: 2026-10-17
@@ -81,6 +81,7 @@
 - Target: one sort under 10 s, measured with the timer in `sorter.py`.
 - Why: One sort took 49.4 s (`NUMBERS.md`). Cause unknown.
 - Considered: Not recorded.
+- State: not met. Single runs so far: 49.4 s, 15.3 s, 43.8 s (`NUMBERS.md`).
 
 ## D12. Public GitHub repo
 - Date: 2026-10-17
@@ -99,8 +100,8 @@
 - Date: 2026-10-17
 - Decision: Use `cant_fix_now` everywhere in the code.
 - Why: Not recorded.
-- Considered: `"can't fix now"`, the value in the schema at `sorter.py:13`.
-- State: `sorter.py:13` still says `"can't fix now"`. Ayush fixes it next. See `GOTCHAS.md` #4.
+- Considered: `"can't fix now"`, the old value in the schema at `sorter.py:13`.
+- State: done in commit `0fe9ae1` and tested by Ayush. See `GOTCHAS.md` #4.
 
 ## D15. Shape of the `/sort` endpoint (suggested by Claude, accepted by Ayush)
 - Date: 2026-10-17
@@ -110,7 +111,16 @@
 - State: not built (step 4). Error responses not decided.
 
 ## D16. Order of the next work
+- Replaced by D17 (2026-10-17).
 - Date: 2026-10-17
 - Decision: 1 fix the bucket name, 2 add `requirements.txt`, 3 fix the speed, 4 step 4 (FastAPI `/sort`), 5 step 5 (page).
 - Why: Not recorded.
 - Considered: The first KB draft's order: bucket fix, speed, step 4, `requirements.txt`, step 5.
+
+## D17. Measure speed properly before fixing it
+- Date: 2026-10-17
+- Decision: Before trying any speed fix, measure properly: several runs, take the median.
+- New order of work: 1 measure speed, 2 add `requirements.txt`, 3 fix the speed, 4 step 4 (FastAPI `/sort`), 5 step 5 (page). The bucket fix from D16 is done.
+- Why: Not stated directly. Context: three single runs gave 49.4 s, 15.3 s and 43.8 s, and the cause of the variation is unknown (`NUMBERS.md`).
+- Considered: D16's order, which went straight to the speed fix.
+- Replaces: D16.

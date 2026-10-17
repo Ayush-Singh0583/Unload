@@ -1,6 +1,6 @@
 # Architecture
 
-State on 2026-10-17, commit `deeb458`. Two Python scripts. No package, no tests.
+State on 2026-10-17, commit `0fe9ae1`. Two Python scripts. No package, no tests.
 
 ## Folder structure
 ```
@@ -38,7 +38,7 @@ Module level:
 Classes (Pydantic `BaseModel`):
 - `Item` (lines 11–16)
   - `text: str`: one thing from the dump, as a short clear line
-  - `bucket: Literal["tonight", "this_week", "later", "can't fix now"]`: when to deal with it
+  - `bucket: Literal["tonight", "this_week", "later", "cant_fix_now"]`: when to deal with it
   - `why: str`: one short reason for the bucket
 - `SortedDump` (lines 18–22)
   - `items: list[Item]`
@@ -53,10 +53,10 @@ Function:
   - Raises `pydantic.ValidationError` if the reply does not match the schema.
   - No error handling around the API call.
 
-`__main__` block (lines 48–63):
-- Uses a hard-coded sample dump (lines 49–50).
-- Times `sort_dump()` with `time.perf_counter()` (lines 52–54).
-- Prints items grouped by bucket, in the order `tonight`, `this_week`, `later`, `cant_fix_now` (line 56), each with its `why`.
+`__main__` block (lines 48–64):
+- Uses a hard-coded sample dump of 8 items (lines 49–51).
+- Times `sort_dump()` with `time.perf_counter()` (lines 53–55).
+- Prints items grouped by bucket, in the order `tonight`, `this_week`, `later`, `cant_fix_now` (line 57), each with its `why`.
 - Prints `Next step: ...` and `Took X.X s`.
 
 ## Data flow
@@ -84,9 +84,9 @@ user text  (dump: str, hard-coded in __main__ for now)
 - Model name: hard-coded twice, `hello.py:7` and `sorter.py:38`.
 - Prompt wording: `RULES` in `sorter.py` (lines 24–34).
 - Field meanings shown to Gemini: the `Field(description=...)` texts in `Item` and `SortedDump`.
-- Bucket names: three places that must match. Decided name for the fourth bucket: `cant_fix_now` (`DECISIONS.md` D14).
-  - Schema: `sorter.py:13`. Still `"can't fix now"`; must become `cant_fix_now`.
-  - Prompt: `sorter.py:27–30`. Already `cant_fix_now`.
-  - Print loop: `sorter.py:56`. Already `cant_fix_now`.
+- Bucket names: three places that must match. All say `cant_fix_now` since commit `0fe9ae1` (`DECISIONS.md` D14).
+  - Schema: `sorter.py:13`
+  - Prompt: `sorter.py:27–30`
+  - Print loop: `sorter.py:57`
   - See `GOTCHAS.md` #4.
-- Sample dump for terminal runs: `sorter.py:49–50`. Work-type tasks only (`GOTCHAS.md` #1).
+- Sample dump for terminal runs: `sorter.py:49–51`. Work-type tasks only (`GOTCHAS.md` #1).

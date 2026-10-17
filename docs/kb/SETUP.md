@@ -64,7 +64,7 @@ python sorter.py
 - Prints sections `== tonight ==`, `== this_week ==`, `== later ==`, `== cant_fix_now ==`.
 - Each item is printed as `- <text>  (<why>)`.
 - Then prints `Next step: ...` and `Took X.X s`.
-- To try other text, change the `dump` string in the `__main__` block (`sorter.py:49–50`). Work-type tasks only (`GOTCHAS.md` #1).
+- To try other text, change the `dump` string in the `__main__` block (`sorter.py:49–51`). Work-type tasks only (`GOTCHAS.md` #1).
 
 ## Not set up yet
 - No FastAPI app, so there is no server to start yet (step 4).
